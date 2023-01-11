@@ -1,6 +1,6 @@
 [package]
 name = "clap_complete"
-version = "4.0.6"
+version = "4.0.7"
 description = "Generate shell completion scripts for your clap::Command"
 repository = "https://github.com/clap-rs/clap/tree/master/clap_complete"
 categories = ["command-line-interface"]
@@ -10,18 +10,10 @@ keywords = [
   "completion",
   "bash",
 ]
-license = "MIT OR Apache-2.0"
-edition = "2021"
-rust-version = "1.60.0"  # MSRV
-include = [
-  "build.rs",
-  "src/**/*",
-  "Cargo.toml",
-  "LICENSE*",
-  "README.md",
-  "benches/**/*",
-  "examples/**/*"
-]
+license.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+include.workspace = true
 
 [package.metadata.docs.rs]
 targets = ["x86_64-unknown-linux-gnu"]
@@ -51,7 +43,7 @@ unicode-xid = { version = "0.2.2", optional = true }
 [dev-dependencies]
 snapbox = { version = "0.4", features = ["diff"] }
 # Cutting out `filesystem` feature
-trycmd = { version = "0.14.3", default-features = false, features = ["color-auto", "diff", "examples"] }
+trycmd = { version = "0.14.6", default-features = false, features = ["color-auto", "diff", "examples"] }
 clap = { path = "../", version = "4.0.0", default-features = false, features = ["std", "derive", "help"] }
 
 [[example]]

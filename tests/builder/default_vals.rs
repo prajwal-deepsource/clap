@@ -18,6 +18,10 @@ fn opts() {
     let m = r.unwrap();
     assert!(m.contains_id("o"));
     assert_eq!(
+        m.value_source("o").unwrap(),
+        clap::parser::ValueSource::DefaultValue
+    );
+    assert_eq!(
         m.get_one::<String>("o").map(|v| v.as_str()).unwrap(),
         "default"
     );
@@ -48,7 +52,7 @@ fn opt_without_value_fail() {
     assert_eq!(err.kind(), ErrorKind::InvalidValue);
     assert!(err
         .to_string()
-        .contains("The argument '-o <opt>' requires a value but none was supplied"));
+        .contains("a value is required for '-o <opt>' but none was supplied"));
 }
 
 #[test]
@@ -59,6 +63,10 @@ fn opt_user_override() {
     assert!(r.is_ok(), "{}", r.unwrap_err());
     let m = r.unwrap();
     assert!(m.contains_id("opt"));
+    assert_eq!(
+        m.value_source("opt").unwrap(),
+        clap::parser::ValueSource::CommandLine
+    );
     assert_eq!(
         m.get_one::<String>("opt").map(|v| v.as_str()).unwrap(),
         "value"
@@ -74,6 +82,10 @@ fn positionals() {
     let m = r.unwrap();
     assert!(m.contains_id("arg"));
     assert_eq!(
+        m.value_source("arg").unwrap(),
+        clap::parser::ValueSource::DefaultValue
+    );
+    assert_eq!(
         m.get_one::<String>("arg").map(|v| v.as_str()).unwrap(),
         "default"
     );
@@ -87,6 +99,10 @@ fn positional_user_override() {
     assert!(r.is_ok(), "{}", r.unwrap_err());
     let m = r.unwrap();
     assert!(m.contains_id("arg"));
+    assert_eq!(
+        m.value_source("arg").unwrap(),
+        clap::parser::ValueSource::CommandLine
+    );
     assert_eq!(
         m.get_one::<String>("arg").map(|v| v.as_str()).unwrap(),
         "value"
@@ -714,12 +730,12 @@ fn default_vals_donnot_show_in_smart_usage() {
         cmd,
         "bug",
         "\
-error: The following required arguments were not provided:
+error: the following required arguments were not provided:
   <input>
 
 Usage: bug <input>
 
-For more information try '--help'
+For more information, try '--help'.
 ",
         true,
     );
@@ -780,7 +796,7 @@ fn required_args_with_default_values() {
 #[cfg(debug_assertions)]
 #[test]
 #[cfg(feature = "error-context")]
-#[should_panic = "Argument `arg`'s default_value=\"value\" failed validation: error: 'value' isn't a valid value for '[arg]'"]
+#[should_panic = "Argument `arg`'s default_value=\"value\" failed validation: error: invalid value 'value' for '[arg]'"]
 fn default_values_are_possible_values() {
     use clap::{Arg, Command};
 
@@ -796,7 +812,7 @@ fn default_values_are_possible_values() {
 #[cfg(debug_assertions)]
 #[test]
 #[cfg(feature = "error-context")]
-#[should_panic = "Argument `arg`'s default_value=\"one\" failed validation: error: Invalid value 'one' for '[arg]"]
+#[should_panic = "Argument `arg`'s default_value=\"one\" failed validation: error: invalid value 'one' for '[arg]"]
 fn invalid_default_values() {
     use clap::{Arg, Command};
 
@@ -826,7 +842,7 @@ fn valid_delimited_default_values() {
 #[cfg(debug_assertions)]
 #[test]
 #[cfg(feature = "error-context")]
-#[should_panic = "Argument `arg`'s default_value=\"one\" failed validation: error: Invalid value 'one' for '[arg]"]
+#[should_panic = "Argument `arg`'s default_value=\"one\" failed validation: error: invalid value 'one' for '[arg]"]
 fn invalid_delimited_default_values() {
     use clap::{Arg, Command};
 

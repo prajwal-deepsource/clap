@@ -487,7 +487,7 @@ impl Command {
     /// [`Command::try_get_matches_from_mut`]: Command::try_get_matches_from_mut()
     #[inline]
     pub fn get_matches(self) -> ArgMatches {
-        self.get_matches_from(&mut env::args_os())
+        self.get_matches_from(env::args_os())
     }
 
     /// Parse [`env::args_os`], exiting on failure.
@@ -545,7 +545,7 @@ impl Command {
     #[inline]
     pub fn try_get_matches(self) -> ClapResult<ArgMatches> {
         // Start the parsing
-        self.try_get_matches_from(&mut env::args_os())
+        self.try_get_matches_from(env::args_os())
     }
 
     /// Parse the specified arguments, exiting on failure.
@@ -1744,7 +1744,7 @@ impl Command {
     /// Valid tags are:
     ///
     ///   * `{name}`                - Display name for the (sub-)command.
-    ///   * `{bin}`                 - Binary name.
+    ///   * `{bin}`                 - Binary name.(deprecated)
     ///   * `{version}`             - Version number.
     ///   * `{author}`              - Author information.
     ///   * `{author-with-newline}` - Author followed by `\n`.
@@ -1772,7 +1772,7 @@ impl Command {
     /// # use clap::Command;
     /// Command::new("myprog")
     ///     .version("1.0")
-    ///     .help_template("{bin} ({version}) - {usage}")
+    ///     .help_template("{name} ({version}) - {usage}")
     /// # ;
     /// ```
     ///
@@ -2641,8 +2641,8 @@ impl Command {
     ///     alpha   Some help and text
     ///
     /// Options:
-    ///     -h, --help       Print help information
-    ///     -V, --version    Print version information
+    ///     -h, --help       Print help
+    ///     -V, --version    Print version
     /// ```
     #[inline]
     #[must_use]
@@ -3105,8 +3105,8 @@ impl Command {
     ///     sub1
     ///
     /// Options:
-    ///     -h, --help       Print help information
-    ///     -V, --version    Print version information
+    ///     -h, --help       Print help
+    ///     -V, --version    Print version
     /// ```
     ///
     /// but usage of `subcommand_value_name`
@@ -3132,8 +3132,8 @@ impl Command {
     ///     sub1
     ///
     /// Options:
-    ///     -h, --help       Print help information
-    ///     -V, --version    Print version information
+    ///     -h, --help       Print help
+    ///     -V, --version    Print version
     /// ```
     #[must_use]
     pub fn subcommand_value_name(mut self, value_name: impl IntoResettable<Str>) -> Self {
@@ -3169,8 +3169,8 @@ impl Command {
     ///     sub1
     ///
     /// Options:
-    ///     -h, --help       Print help information
-    ///     -V, --version    Print version information
+    ///     -h, --help       Print help
+    ///     -V, --version    Print version
     /// ```
     ///
     /// but usage of `subcommand_help_heading`
@@ -3196,8 +3196,8 @@ impl Command {
     ///     sub1
     ///
     /// Options:
-    ///     -h, --help       Print help information
-    ///     -V, --version    Print version information
+    ///     -h, --help       Print help
+    ///     -V, --version    Print version
     /// ```
     #[must_use]
     pub fn subcommand_help_heading(mut self, heading: impl IntoResettable<Str>) -> Self {
@@ -4243,10 +4243,10 @@ impl Command {
                 .action(ArgAction::Help);
             if self.long_help_exists {
                 arg = arg
-                    .help("Print help information (use `--help` for more detail)")
-                    .long_help("Print help information (use `-h` for a summary)");
+                    .help("Print help (see more with '--help')")
+                    .long_help("Print help (see a summary with '-h')");
             } else {
-                arg = arg.help("Print help information");
+                arg = arg.help("Print help");
             }
             // Avoiding `arg_internal` to not be sensitive to `next_help_heading` /
             // `next_display_order`
@@ -4258,7 +4258,7 @@ impl Command {
                 .short('V')
                 .long("version")
                 .action(ArgAction::Version)
-                .help("Print version information");
+                .help("Print version");
             // Avoiding `arg_internal` to not be sensitive to `next_help_heading` /
             // `next_display_order`
             self.args.push(arg);

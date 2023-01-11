@@ -13,6 +13,43 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Compatibility
+
+MSRV changed to 1.64.0
+
+For apps with custom `--help` and `--version` flags:
+- Descriptions for `--help` and `--version` changed
+
+When apps have errors imitating clap's error style:
+- Error message style was changed, including
+  - Moving away from "did you mean" to tips
+  - Leading letter is lower case
+  - "For more" added some punctuation
+
+### Fixes
+
+- *(help)* Try be more clearer and succinct with `--help` and `--version` (also helps with overflow)
+- *(error)* Try to be more clearer and succinct with error messages
+- *(error)* Officially adopt [an error style guide](https://rustc-dev-guide.rust-lang.org/diagnostics.html#suggestion-style-guide)
+
+## [4.0.32] - 2022-12-22
+
+### Fixes
+
+- *(parser)* When overriding `required(true)`, consider args that conflict with its group
+
+## [4.0.31] - 2022-12-22
+
+### Performance
+
+- Speed up parsing when a lot of different flags are present (100 unique flags)
+
+## [4.0.30] - 2022-12-21
+
+### Fixes
+
+- *(error)* Improve error for `args_conflicts_with_subcommand`
+
 ## [4.0.29] - 2022-11-29
 
 ## [4.0.28] - 2022-11-29
@@ -4041,7 +4078,10 @@ Minimum version of Rust is now v1.13.0 (Stable)
 * **arg**  allow lifetimes other than 'static in arguments ([9e8c1fb9](https://github.com/clap-rs/clap/commit/9e8c1fb9406f8448873ca58bab07fe905f1551e5))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/clap-rs/clap/compare/v4.0.29...HEAD
+[Unreleased]: https://github.com/clap-rs/clap/compare/v4.0.32...HEAD
+[4.0.32]: https://github.com/clap-rs/clap/compare/v4.0.31...v4.0.32
+[4.0.31]: https://github.com/clap-rs/clap/compare/v4.0.30...v4.0.31
+[4.0.30]: https://github.com/clap-rs/clap/compare/v4.0.29...v4.0.30
 [4.0.29]: https://github.com/clap-rs/clap/compare/v4.0.28...v4.0.29
 [4.0.28]: https://github.com/clap-rs/clap/compare/v4.0.27...v4.0.28
 [4.0.27]: https://github.com/clap-rs/clap/compare/v4.0.26...v4.0.27

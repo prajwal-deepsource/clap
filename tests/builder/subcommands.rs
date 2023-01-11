@@ -98,15 +98,14 @@ fn multiple_aliases() {
 fn subcmd_did_you_mean_output() {
     #[cfg(feature = "suggestions")]
     static DYM_SUBCMD: &str = "\
-error: The subcommand 'subcm' wasn't recognized
+error: unrecognized subcommand 'subcm'
 
-  Did you mean 'subcmd'?
-
-  If you believe you received this message in error, try re-running with 'dym -- subcm'
+  note: subcommand 'subcmd' exists
+  note: to pass 'subcm' as a value, use 'dym -- subcm'
 
 Usage: dym [COMMAND]
 
-For more information try '--help'
+For more information, try '--help'.
 ";
 
     let cmd = Command::new("dym").subcommand(Command::new("subcmd"));
@@ -119,15 +118,14 @@ For more information try '--help'
 fn subcmd_did_you_mean_output_ambiguous() {
     #[cfg(feature = "suggestions")]
     static DYM_SUBCMD_AMBIGUOUS: &str = "\
-error: The subcommand 'te' wasn't recognized
+error: unrecognized subcommand 'te'
 
-  Did you mean 'test', 'temp'?
-
-  If you believe you received this message in error, try re-running with 'dym -- te'
+  note: subcommand 'test', 'temp' exist
+  note: to pass 'te' as a value, use 'dym -- te'
 
 Usage: dym [COMMAND]
 
-For more information try '--help'
+For more information, try '--help'.
 ";
 
     let cmd = Command::new("dym")
@@ -141,13 +139,13 @@ For more information try '--help'
 #[cfg(feature = "error-context")]
 fn subcmd_did_you_mean_output_arg() {
     static EXPECTED: &str = "\
-error: Found argument '--subcmarg' which wasn't expected, or isn't valid in this context
+error: unexpected argument '--subcmarg'
 
-  Did you mean to put '--subcmdarg' after the subcommand 'subcmd'?
+  note: 'subcmd --subcmdarg' exists
 
 Usage: dym [COMMAND]
 
-For more information try '--help'
+For more information, try '--help'.
 ";
 
     let cmd = Command::new("dym")
@@ -161,11 +159,11 @@ For more information try '--help'
 #[cfg(feature = "error-context")]
 fn subcmd_did_you_mean_output_arg_false_positives() {
     static EXPECTED: &str = "\
-error: Found argument '--subcmarg' which wasn't expected, or isn't valid in this context
+error: unexpected argument '--subcmarg'
 
 Usage: dym [COMMAND]
 
-For more information try '--help'
+For more information, try '--help'.
 ";
 
     let cmd = Command::new("dym")
@@ -193,8 +191,8 @@ Commands:
   help  Print this message or the help of the given subcommand(s)
 
 Options:
-  -h, --help     Print help information
-  -V, --version  Print version information
+  -h, --help     Print help
+  -V, --version  Print version
 ";
 
     let cmd = Command::new("clap-test").version("2.6").subcommand(
@@ -217,8 +215,8 @@ Commands:
   help  Print this message or the help of the given subcommand(s)
 
 Options:
-  -h, --help     Print help information
-  -V, --version  Print version information
+  -h, --help     Print help
+  -V, --version  Print version
 ";
 
     let cmd = Command::new("clap-test")
@@ -353,13 +351,13 @@ fn subcommand_placeholder_test() {
 #[cfg(feature = "error-context")]
 fn subcommand_used_after_double_dash() {
     static SUBCMD_AFTER_DOUBLE_DASH: &str = "\
-error: Found argument 'subcmd' which wasn't expected, or isn't valid in this context
+error: unexpected argument 'subcmd'
 
-  If you tried to supply 'subcmd' as a subcommand, remove the '--' before it.
+  note: subcommand 'subcmd' exists; to use it, remove the '--' before it
 
 Usage: cmd [COMMAND]
 
-For more information try '--help'
+For more information, try '--help'.
 ";
 
     let cmd = Command::new("cmd").subcommand(Command::new("subcmd"));
@@ -430,11 +428,11 @@ fn subcommand_not_recognized() {
     utils::assert_output(
         cmd,
         "fake help",
-        "error: The subcommand 'help' wasn't recognized
+        "error: unrecognized subcommand 'help'
 
 Usage: fake [COMMAND]
 
-For more information try '--help'
+For more information, try '--help'.
 ",
         true,
     );
@@ -504,11 +502,11 @@ fn bad_multicall_command_error() {
     let err = cmd.clone().try_get_matches_from(["world"]).unwrap_err();
     assert_eq!(err.kind(), ErrorKind::InvalidSubcommand);
     static HELLO_EXPECTED: &str = "\
-error: The subcommand 'world' wasn't recognized
+error: unrecognized subcommand 'world'
 
 Usage: <COMMAND>
 
-For more information try 'help'
+For more information, try 'help'.
 ";
     utils::assert_eq(HELLO_EXPECTED, err.to_string());
 
@@ -517,15 +515,14 @@ For more information try 'help'
         let err = cmd.clone().try_get_matches_from(["baz"]).unwrap_err();
         assert_eq!(err.kind(), ErrorKind::InvalidSubcommand);
         static BAZ_EXPECTED: &str = "\
-error: The subcommand 'baz' wasn't recognized
+error: unrecognized subcommand 'baz'
 
-  Did you mean 'bar'?
-
-  If you believe you received this message in error, try re-running with ' -- baz'
+  note: subcommand 'bar' exists
+  note: to pass 'baz' as a value, use ' -- baz'
 
 Usage: <COMMAND>
 
-For more information try 'help'
+For more information, try 'help'.
 ";
         utils::assert_eq(BAZ_EXPECTED, err.to_string());
     }
@@ -567,8 +564,8 @@ Arguments:
   [value]  
 
 Options:
-  -h, --help     Print help information
-  -V, --version  Print version information
+  -h, --help     Print help
+  -V, --version  Print version
 ";
     let cmd = Command::new("repl")
         .version("1.0.0")
@@ -587,8 +584,8 @@ Arguments:
   [value]  
 
 Options:
-  -h, --help     Print help information
-  -V, --version  Print version information
+  -h, --help     Print help
+  -V, --version  Print version
 ";
     let cmd = Command::new("repl")
         .version("1.0.0")
@@ -607,8 +604,8 @@ Arguments:
   [value]  
 
 Options:
-  -h, --help     Print help information
-  -V, --version  Print version information
+  -h, --help     Print help
+  -V, --version  Print version
 ";
     let mut cmd = Command::new("repl")
         .version("1.0.0")

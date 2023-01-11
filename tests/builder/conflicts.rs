@@ -236,6 +236,35 @@ fn arg_conflicts_with_required_group() {
 }
 
 #[test]
+fn arg_conflicts_with_group_with_required_memeber() {
+    let mut cmd = Command::new("group_conflict")
+        .arg(arg!(-f --flag "some flag").conflicts_with("gr"))
+        .group(ArgGroup::new("gr").arg("some").arg("other"))
+        .arg(arg!(--some "some arg").required(true))
+        .arg(arg!(--other "other arg"));
+
+    let result = cmd.try_get_matches_from_mut(vec!["myprog", "--other", "-f"]);
+    assert!(result.is_err());
+    let err = result.err().unwrap();
+    assert_eq!(err.kind(), ErrorKind::ArgumentConflict);
+
+    let result = cmd.try_get_matches_from_mut(vec!["myprog", "-f", "--some"]);
+    assert!(result.is_err());
+    let err = result.err().unwrap();
+    assert_eq!(err.kind(), ErrorKind::ArgumentConflict);
+
+    let result = cmd.try_get_matches_from_mut(vec!["myprog", "--some"]);
+    if let Err(err) = result {
+        panic!("{}", err);
+    }
+
+    let result = cmd.try_get_matches_from_mut(vec!["myprog", "--flag"]);
+    if let Err(err) = result {
+        panic!("{}", err);
+    }
+}
+
+#[test]
 fn required_group_conflicts_with_arg() {
     let mut cmd = Command::new("group_conflict")
         .arg(arg!(-f --flag "some flag"))
@@ -292,11 +321,11 @@ fn get_arg_conflicts_with_group() {
 #[cfg(feature = "error-context")]
 fn conflict_output() {
     static CONFLICT_ERR: &str = "\
-error: The argument '--flag...' cannot be used with '-F'
+error: the argument '--flag...' cannot be used with '-F'
 
 Usage: clap-test --flag... --long-option-2 <option2> <positional> <positional2> [positional3]...
 
-For more information try '--help'
+For more information, try '--help'.
 ";
 
     utils::assert_output(
@@ -311,11 +340,11 @@ For more information try '--help'
 #[cfg(feature = "error-context")]
 fn conflict_output_rev() {
     static CONFLICT_ERR_REV: &str = "\
-error: The argument '-F' cannot be used with '--flag...'
+error: the argument '-F' cannot be used with '--flag...'
 
 Usage: clap-test -F --long-option-2 <option2> <positional> <positional2> [positional3]...
 
-For more information try '--help'
+For more information, try '--help'.
 ";
 
     utils::assert_output(
@@ -330,11 +359,11 @@ For more information try '--help'
 #[cfg(feature = "error-context")]
 fn conflict_output_repeat() {
     static ERR: &str = "\
-error: The argument '-F' was provided more than once, but cannot be used multiple times
+error: the argument '-F' cannot be used multiple times
 
 Usage: clap-test [OPTIONS] [positional] [positional2] [positional3]... [COMMAND]
 
-For more information try '--help'
+For more information, try '--help'.
 ";
 
     utils::assert_output(utils::complex_app(), "clap-test -F -F", ERR, true);
@@ -344,11 +373,11 @@ For more information try '--help'
 #[cfg(feature = "error-context")]
 fn conflict_output_with_required() {
     static CONFLICT_ERR: &str = "\
-error: The argument '--flag...' cannot be used with '-F'
+error: the argument '--flag...' cannot be used with '-F'
 
 Usage: clap-test --flag... --long-option-2 <option2> <positional> <positional2> [positional3]...
 
-For more information try '--help'
+For more information, try '--help'.
 ";
 
     utils::assert_output(
@@ -363,11 +392,11 @@ For more information try '--help'
 #[cfg(feature = "error-context")]
 fn conflict_output_rev_with_required() {
     static CONFLICT_ERR_REV: &str = "\
-error: The argument '-F' cannot be used with '--flag...'
+error: the argument '-F' cannot be used with '--flag...'
 
 Usage: clap-test -F --long-option-2 <option2> <positional> <positional2> [positional3]...
 
-For more information try '--help'
+For more information, try '--help'.
 ";
 
     utils::assert_output(
@@ -382,13 +411,13 @@ For more information try '--help'
 #[cfg(feature = "error-context")]
 fn conflict_output_three_conflicting() {
     static CONFLICT_ERR_THREE: &str = "\
-error: The argument '--one' cannot be used with:
+error: the argument '--one' cannot be used with:
   --two
   --three
 
 Usage: three_conflicting_arguments --one
 
-For more information try '--help'
+For more information, try '--help'.
 ";
 
     let cmd = Command::new("three_conflicting_arguments")
@@ -440,7 +469,7 @@ fn two_conflicting_arguments() {
     let a = a.unwrap_err();
     assert!(
         a.to_string()
-            .contains("The argument \'--develop\' cannot be used with \'--production\'"),
+            .contains("the argument \'--develop\' cannot be used with \'--production\'"),
         "{}",
         a
     );
@@ -474,7 +503,7 @@ fn three_conflicting_arguments() {
     let a = a.unwrap_err();
     assert!(
         a.to_string()
-            .contains("The argument \'--one\' cannot be used with:"),
+            .contains("the argument \'--one\' cannot be used with:"),
         "{}",
         a
     );
@@ -653,6 +682,74 @@ fn exclusive_with_required() {
         .unwrap();
 
     cmd.clone().try_get_matches_from(["bug", "--test"]).unwrap();
+}
+
+#[test]
+fn args_negate_subcommands_one_level() {
+    let res = Command::new("disablehelp")
+        .args_conflicts_with_subcommands(true)
+        .subcommand_negates_reqs(true)
+        .arg(arg!(<arg1> "some arg"))
+        .arg(arg!(<arg2> "some arg"))
+        .subcommand(
+            Command::new("sub1").subcommand(Command::new("sub2").subcommand(Command::new("sub3"))),
+        )
+        .try_get_matches_from(vec!["", "pickles", "sub1"]);
+    assert!(res.is_ok(), "error: {:?}", res.unwrap_err().kind());
+    let m = res.unwrap();
+    assert_eq!(
+        m.get_one::<String>("arg2").map(|v| v.as_str()),
+        Some("sub1")
+    );
+}
+
+#[test]
+fn args_negate_subcommands_two_levels() {
+    let res = Command::new("disablehelp")
+        .args_conflicts_with_subcommands(true)
+        .subcommand_negates_reqs(true)
+        .arg(arg!(<arg1> "some arg"))
+        .arg(arg!(<arg2> "some arg"))
+        .subcommand(
+            Command::new("sub1")
+                .args_conflicts_with_subcommands(true)
+                .subcommand_negates_reqs(true)
+                .arg(arg!(<arg> "some"))
+                .arg(arg!(<arg2> "some"))
+                .subcommand(Command::new("sub2").subcommand(Command::new("sub3"))),
+        )
+        .try_get_matches_from(vec!["", "sub1", "arg", "sub2"]);
+    assert!(res.is_ok(), "error: {:?}", res.unwrap_err().kind());
+    let m = res.unwrap();
+    assert_eq!(
+        m.subcommand_matches("sub1")
+            .unwrap()
+            .get_one::<String>("arg2")
+            .map(|v| v.as_str()),
+        Some("sub2")
+    );
+}
+
+#[test]
+#[cfg(feature = "error-context")]
+fn subcommand_conflict_error_message() {
+    static CONFLICT_ERR: &str = "\
+error: unexpected argument 'sub1'
+
+Usage: test [OPTIONS]
+       test <COMMAND>
+
+For more information, try '--help'.
+";
+
+    let cmd = Command::new("test")
+        .args_conflicts_with_subcommands(true)
+        .arg(arg!(-p --place <"place id"> "Place ID to open"))
+        .subcommand(
+            Command::new("sub1").subcommand(Command::new("sub2").subcommand(Command::new("sub3"))),
+        );
+
+    utils::assert_output(cmd, "test --place id sub1", CONFLICT_ERR, true);
 }
 
 #[test]
