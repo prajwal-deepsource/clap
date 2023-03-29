@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [0.2.10] - 2023-03-16
+
+## [0.2.9] - 2023-02-22
+
+### Fixes
+
+- Only show value names if a value is taken
+
+## [0.2.8] - 2023-02-15
+
+## [0.2.7] - 2023-01-13
+
+### Compatibility
+
+MSRV changed to 1.64.0
+
 ## [0.2.6] - 2022-12-22
 
 ## [0.2.5] - 2022-11-24
@@ -66,7 +82,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Expanded the documentation
 
 <!-- next-url -->
-[Unreleased]: https://github.com/clap-rs/clap/compare/clap_mangen-v0.2.6...HEAD
+[Unreleased]: https://github.com/clap-rs/clap/compare/clap_mangen-v0.2.10...HEAD
+[0.2.10]: https://github.com/clap-rs/clap/compare/clap_mangen-v0.2.9...clap_mangen-v0.2.10
+[0.2.9]: https://github.com/clap-rs/clap/compare/clap_mangen-v0.2.8...clap_mangen-v0.2.9
+[0.2.8]: https://github.com/clap-rs/clap/compare/clap_mangen-v0.2.7...clap_mangen-v0.2.8
+[0.2.7]: https://github.com/clap-rs/clap/compare/clap_mangen-v0.2.6...clap_mangen-v0.2.7
 [0.2.6]: https://github.com/clap-rs/clap/compare/clap_mangen-v0.2.5...clap_mangen-v0.2.6
 [0.2.5]: https://github.com/clap-rs/clap/compare/clap_mangen-v0.2.4...clap_mangen-v0.2.5
 [0.2.4]: https://github.com/clap-rs/clap/compare/clap_mangen-v0.2.3...clap_mangen-v0.2.4

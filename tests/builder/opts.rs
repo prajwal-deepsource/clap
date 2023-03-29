@@ -446,9 +446,9 @@ fn leading_hyphen_with_only_pos_follows() {
 #[cfg(feature = "error-context")]
 fn did_you_mean() {
     static DYM: &str = "\
-error: unexpected argument '--optio'
+error: unexpected argument '--optio' found
 
-  note: argument '--option' exists
+  tip: a similar argument exists: '--option'
 
 Usage: clap-test --option <opt>... [positional] [positional2] [positional3]...
 
@@ -544,9 +544,9 @@ fn issue_1105_empty_value_short_explicit_no_space() {
 #[cfg(feature = "error-context")]
 fn issue_1073_suboptimal_flag_suggestion() {
     static DYM_ISSUE_1073: &str = "\
-error: unexpected argument '--files-without-matches'
+error: unexpected argument '--files-without-matches' found
 
-  note: argument '--files-without-match' exists
+  tip: a similar argument exists: '--files-without-match'
 
 Usage: ripgrep-616 --files-without-match
 

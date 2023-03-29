@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [4.2.0] - 2023-03-28
+
+## [4.1.6] - 2023-03-28
+
+## [4.1.5] - 2023-03-16
+
+## [4.1.4] - 2023-02-27
+
+### Features
+
+- *(zsh)* Allow sourcing completion
+
+## [4.1.3] - 2023-02-23
+
+### Fixes
+
+- *(zsh)* Improve handling of multi-valued arguments
+
+## [4.1.2] - 2023-02-15
+
+## [4.1.1] - 2023-01-23
+
+### Fixes
+
+- *(bash)* Mark `cmd` variable as local
+
+## [4.1.0] - 2023-01-13
+
+### Compatibility
+
+MSRV changed to 1.64.0
+
 ## [4.0.7] - 2022-12-22
 
 ## [4.0.6] - 2022-11-24
@@ -97,7 +129,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [3.0.1] - 2022-01-03
 
 <!-- next-url -->
-[Unreleased]: https://github.com/clap-rs/clap/compare/clap_complete-v4.0.7...HEAD
+[Unreleased]: https://github.com/clap-rs/clap/compare/clap_complete-v4.2.0...HEAD
+[4.2.0]: https://github.com/clap-rs/clap/compare/clap_complete-v4.1.6...clap_complete-v4.2.0
+[4.1.6]: https://github.com/clap-rs/clap/compare/clap_complete-v4.1.5...clap_complete-v4.1.6
+[4.1.5]: https://github.com/clap-rs/clap/compare/clap_complete-v4.1.4...clap_complete-v4.1.5
+[4.1.4]: https://github.com/clap-rs/clap/compare/clap_complete-v4.1.3...clap_complete-v4.1.4
+[4.1.3]: https://github.com/clap-rs/clap/compare/clap_complete-v4.1.2...clap_complete-v4.1.3
+[4.1.2]: https://github.com/clap-rs/clap/compare/clap_complete-v4.1.1...clap_complete-v4.1.2
+[4.1.1]: https://github.com/clap-rs/clap/compare/clap_complete-v4.1.0...clap_complete-v4.1.1
+[4.1.0]: https://github.com/clap-rs/clap/compare/clap_complete-v4.0.7...clap_complete-v4.1.0
 [4.0.7]: https://github.com/clap-rs/clap/compare/clap_complete-v4.0.6...clap_complete-v4.0.7
 [4.0.6]: https://github.com/clap-rs/clap/compare/clap_complete-v4.0.5...clap_complete-v4.0.6
 [4.0.5]: https://github.com/clap-rs/clap/compare/clap_complete-v4.0.4...clap_complete-v4.0.5

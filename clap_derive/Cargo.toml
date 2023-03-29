@@ -1,6 +1,6 @@
 [package]
 name = "clap_derive"
-version = "4.0.21"
+version = "4.2.0"
 description = "Parse command line argument by defining a struct, derive crate."
 repository = "https://github.com/clap-rs/clap/tree/master/clap_derive"
 categories = ["command-line-interface", "development-tools::procedural-macro-helpers"]
@@ -29,11 +29,10 @@ proc-macro = true
 bench = false
 
 [dependencies]
-syn = { version = "1.0.74", features = ["full"] }
+syn = { version = "2.0.8", features = ["full"] }
 quote = "1.0.9"
 proc-macro2 = "1.0.42"
 heck = "0.4.0"
-proc-macro-error = "1"
 
 [features]
 default = []

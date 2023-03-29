@@ -100,8 +100,8 @@ fn subcmd_did_you_mean_output() {
     static DYM_SUBCMD: &str = "\
 error: unrecognized subcommand 'subcm'
 
-  note: subcommand 'subcmd' exists
-  note: to pass 'subcm' as a value, use 'dym -- subcm'
+  tip: a similar subcommand exists: 'subcmd'
+  tip: to pass 'subcm' as a value, use 'dym -- subcm'
 
 Usage: dym [COMMAND]
 
@@ -120,8 +120,8 @@ fn subcmd_did_you_mean_output_ambiguous() {
     static DYM_SUBCMD_AMBIGUOUS: &str = "\
 error: unrecognized subcommand 'te'
 
-  note: subcommand 'test', 'temp' exist
-  note: to pass 'te' as a value, use 'dym -- te'
+  tip: some similar subcommands exist: 'test', 'temp'
+  tip: to pass 'te' as a value, use 'dym -- te'
 
 Usage: dym [COMMAND]
 
@@ -139,9 +139,9 @@ For more information, try '--help'.
 #[cfg(feature = "error-context")]
 fn subcmd_did_you_mean_output_arg() {
     static EXPECTED: &str = "\
-error: unexpected argument '--subcmarg'
+error: unexpected argument '--subcmarg' found
 
-  note: 'subcmd --subcmdarg' exists
+  tip: 'subcmd --subcmdarg' exists
 
 Usage: dym [COMMAND]
 
@@ -159,7 +159,7 @@ For more information, try '--help'.
 #[cfg(feature = "error-context")]
 fn subcmd_did_you_mean_output_arg_false_positives() {
     static EXPECTED: &str = "\
-error: unexpected argument '--subcmarg'
+error: unexpected argument '--subcmarg' found
 
 Usage: dym [COMMAND]
 
@@ -223,24 +223,6 @@ Options:
         .version("2.6")
         .subcommand(Command::new("test").about("Some help").alias("invisible"));
     utils::assert_output(cmd, "clap-test --help", INVISIBLE_ALIAS_HELP, false);
-}
-
-#[test]
-#[cfg(feature = "unstable-replace")]
-fn replace() {
-    let m = Command::new("prog")
-        .subcommand(
-            Command::new("module").subcommand(Command::new("install").about("Install module")),
-        )
-        .replace("install", ["module", "install"])
-        .try_get_matches_from(vec!["prog", "install"])
-        .unwrap();
-
-    assert_eq!(m.subcommand_name(), Some("module"));
-    assert_eq!(
-        m.subcommand_matches("module").unwrap().subcommand_name(),
-        Some("install")
-    );
 }
 
 #[test]
@@ -351,9 +333,9 @@ fn subcommand_placeholder_test() {
 #[cfg(feature = "error-context")]
 fn subcommand_used_after_double_dash() {
     static SUBCMD_AFTER_DOUBLE_DASH: &str = "\
-error: unexpected argument 'subcmd'
+error: unexpected argument 'subcmd' found
 
-  note: subcommand 'subcmd' exists; to use it, remove the '--' before it
+  tip: subcommand 'subcmd' exists; to use it, remove the '--' before it
 
 Usage: cmd [COMMAND]
 
@@ -517,8 +499,8 @@ For more information, try 'help'.
         static BAZ_EXPECTED: &str = "\
 error: unrecognized subcommand 'baz'
 
-  note: subcommand 'bar' exists
-  note: to pass 'baz' as a value, use ' -- baz'
+  tip: a similar subcommand exists: 'bar'
+  tip: to pass 'baz' as a value, use ' -- baz'
 
 Usage: <COMMAND>
 

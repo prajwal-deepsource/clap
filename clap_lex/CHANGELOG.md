@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [0.4.1] - 2023-03-28
+
+### Compatibility
+
+- Deprecated `OsStrExt::split_at` as its unsound
+
+## [0.4.0] - 2023-03-25
+
+### Breaking Change
+
+- `RawOsStr` and `RawOsString` are no long exported
+- Return types were changed from `RawOsStr` to `OsStr`
+
+### Features
+
+- `OsStrExt` trait added to help with processing `OsStr`s
+
+### Performance
+
+- `os_str_bytes` dependency was dropped to improve build times and reduce binary size
+
+## [0.3.3] - 2023-03-16
+
+## [0.3.2] - 2023-02-23
+
+## [0.3.1] - 2023-01-13
+
+### Compatibility
+
+MSRV changed to 1.64.0
+
 ## [0.3.0] - 2022-09-20
 
 ### Breaking Changes
@@ -40,7 +71,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Drop `memchr` dependency
 
 <!-- next-url -->
-[Unreleased]: https://github.com/clap-rs/clap/compare/clap_lex-v0.3.0...HEAD
+[Unreleased]: https://github.com/clap-rs/clap/compare/clap_lex-v0.4.1...HEAD
+[0.4.1]: https://github.com/clap-rs/clap/compare/clap_lex-v0.4.0...clap_lex-v0.4.1
+[0.4.0]: https://github.com/clap-rs/clap/compare/clap_lex-v0.3.3...clap_lex-v0.4.0
+[0.3.3]: https://github.com/clap-rs/clap/compare/clap_lex-v0.3.2...clap_lex-v0.3.3
+[0.3.2]: https://github.com/clap-rs/clap/compare/clap_lex-v0.3.1...clap_lex-v0.3.2
+[0.3.1]: https://github.com/clap-rs/clap/compare/clap_lex-v0.3.0...clap_lex-v0.3.1
 [0.3.0]: https://github.com/clap-rs/clap/compare/clap_lex-v0.2.4...clap_lex-v0.3.0
 [0.2.4]: https://github.com/clap-rs/clap/compare/clap_lex-v0.2.3...clap_lex-v0.2.4
 [0.2.3]: https://github.com/clap-rs/clap/compare/clap_lex-v0.2.2...clap_lex-v0.2.3

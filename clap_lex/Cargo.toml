@@ -1,6 +1,6 @@
 [package]
 name = "clap_lex"
-version = "0.3.0"
+version = "0.4.1"
 description = "Minimal, flexible command line parser"
 repository = "https://github.com/clap-rs/clap/tree/master/clap_lex"
 categories = ["command-line-interface"]
@@ -28,6 +28,3 @@ pre-release-replacements = [
 
 [lib]
 bench = false
-
-[dependencies]
-os_str_bytes = { version = "6.0", default-features = false, features = ["raw_os_str"] }

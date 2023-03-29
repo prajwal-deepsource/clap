@@ -1,3 +1,5 @@
+use std::ffi::OsStr;
+
 // Despite our design philosophy being to support completion generation, we aren't considering `-`
 // the start of a long because there is no valid value to return.
 #[test]
@@ -49,7 +51,7 @@ fn to_long_with_empty_value() {
 
     let (key, value) = next.to_long().unwrap();
     assert_eq!(key, Ok("long"));
-    assert_eq!(value, Some(clap_lex::RawOsStr::from_str("")));
+    assert_eq!(value, Some(OsStr::new("")));
 }
 
 #[test]
@@ -63,7 +65,7 @@ fn to_long_with_value() {
 
     let (key, value) = next.to_long().unwrap();
     assert_eq!(key, Ok("long"));
-    assert_eq!(value, Some(clap_lex::RawOsStr::from_str("hello")));
+    assert_eq!(value, Some(OsStr::new("hello")));
 }
 
 #[test]

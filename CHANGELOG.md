@@ -9,9 +9,131 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Breaking Changes
 
 - Made `ArgPredicate` `non_exhaustive`
+- *(derive)* `Vec<Vec<T>>` types are now assuming to capture occurrences
+
+### Features
+
+- *(derive)* Group values by their occurrence with `Vec<Vec<T>>`
 
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
+
+## [4.2.0] - 2023-03-28
+
+### Compatibility
+
+- Removed the languishing `unstable-replace` feature (open to discussion at [#2836](https://github.com/clap-rs/clap/issues/2836))
+- Removed the stablized `unstable-grouped` feature
+
+### Features
+
+- Allow any `StyledStr` to accept text styled with ANSI escape codes
+- Respect `CLICOLOR`, `CLICOLOR_FORCE`
+
+### Fixes
+
+- Lighten the tone for "unexpected argument" errors (open to discussion at [#4638](https://github.com/clap-rs/clap/issues/4638))
+
+## [4.1.14] - 2023-03-28
+
+### Features
+
+- *(derive)* `#[group]` raw attribute support
+
+### Performance
+
+- *(derive)* `clap_builder` was pulled out of `clap` so it could build in parallel to `clap_derive`
+- `os_str_bytes` dependency was removed for faster builds and smaller binaries
+
+## [4.1.13] - 2023-03-18
+
+### Performance
+
+- Reduce repeated alloc calls when building a `Command`
+- Reduce duplicate dependencies for faster builds
+
+## [4.1.12] - 2023-03-18
+
+### Internal
+
+- *(derive)* Update to `syn` v2
+
+### Performance
+
+- *(derive)* Faster build times by dropping `proc-macro-error` dependency
+
+## [4.1.11] - 2023-03-17
+
+### Internal
+
+- Update `bitflags`
+
+## [4.1.10] - 2023-03-17
+
+### Fixes
+
+- *(help)* On Windows, avoid underlined text artifacts
+
+## [4.1.9] - 2023-03-16
+
+### Fixes
+
+- *(assert)* Improve the assert when using the wrong action with `get_count` / `get_flag`
+
+## [4.1.8] - 2023-02-27
+
+### Fixes
+
+- *(derive)* Don't `deny` lints on the users behalf
+
+## [4.1.7] - 2023-02-27
+
+### Fixes
+
+- *(derive)* Hide some nightly clippy warnings
+
+## [4.1.6] - 2023-02-15
+
+### Fixes
+
+- *(help)* Don't show long help for `--help` just because hidden possible values include a description
+
+## [4.1.5] - 2023-02-15
+
+### Fixes
+
+- *(help)* Don't show long help for `--help` just because a hidden arg has a possible value with a description
+
+## [4.1.4] - 2023-01-24
+
+### Fixes
+
+- *(help)* Respect `disable_colored_help` when using `arg_required_else_help`
+
+### Performance
+
+- Speed up compiling `arg!` macro
+
+## [4.1.3] - 2023-01-23
+
+### Fixes
+
+- *(error)* Improve suggested flag/value/subcommand when two share a long preifx
+- *(error)* When suggesting one of several subcommands, use the plural `subcommands`, rather than `subcommand`
+
+## [4.1.2] - 2023-01-23
+
+### Fixes
+
+- In documentation, refer to `get_flag`, rather than `get_one::<bool>`
+
+## [4.1.1] - 2023-01-14
+
+### Fixes
+
+- *(error)* Small softening attempt for "unexpected argument" error
+
+## [4.1.0] - 2023-01-13
 
 ### Compatibility
 
@@ -26,8 +148,13 @@ When apps have errors imitating clap's error style:
   - Leading letter is lower case
   - "For more" added some punctuation
 
+### Features
+
+- `ArgMatches::get_occurrences` support for argument values to be grouped by their occurrence
+
 ### Fixes
 
+- *(derive)* Allow `upgrade_from` when arguments / subcommands are explicitly marked as required
 - *(help)* Try be more clearer and succinct with `--help` and `--version` (also helps with overflow)
 - *(error)* Try to be more clearer and succinct with error messages
 - *(error)* Officially adopt [an error style guide](https://rustc-dev-guide.rust-lang.org/diagnostics.html#suggestion-style-guide)
@@ -4078,7 +4205,23 @@ Minimum version of Rust is now v1.13.0 (Stable)
 * **arg**  allow lifetimes other than 'static in arguments ([9e8c1fb9](https://github.com/clap-rs/clap/commit/9e8c1fb9406f8448873ca58bab07fe905f1551e5))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/clap-rs/clap/compare/v4.0.32...HEAD
+[Unreleased]: https://github.com/clap-rs/clap/compare/v4.2.0...HEAD
+[4.2.0]: https://github.com/clap-rs/clap/compare/v4.1.14...v4.2.0
+[4.1.14]: https://github.com/clap-rs/clap/compare/v4.1.13...v4.1.14
+[4.1.13]: https://github.com/clap-rs/clap/compare/v4.1.12...v4.1.13
+[4.1.12]: https://github.com/clap-rs/clap/compare/v4.1.11...v4.1.12
+[4.1.11]: https://github.com/clap-rs/clap/compare/v4.1.10...v4.1.11
+[4.1.10]: https://github.com/clap-rs/clap/compare/v4.1.9...v4.1.10
+[4.1.9]: https://github.com/clap-rs/clap/compare/v4.1.8...v4.1.9
+[4.1.8]: https://github.com/clap-rs/clap/compare/v4.1.7...v4.1.8
+[4.1.7]: https://github.com/clap-rs/clap/compare/v4.1.6...v4.1.7
+[4.1.6]: https://github.com/clap-rs/clap/compare/v4.1.5...v4.1.6
+[4.1.5]: https://github.com/clap-rs/clap/compare/v4.1.4...v4.1.5
+[4.1.4]: https://github.com/clap-rs/clap/compare/v4.1.3...v4.1.4
+[4.1.3]: https://github.com/clap-rs/clap/compare/v4.1.2...v4.1.3
+[4.1.2]: https://github.com/clap-rs/clap/compare/v4.1.1...v4.1.2
+[4.1.1]: https://github.com/clap-rs/clap/compare/v4.1.0...v4.1.1
+[4.1.0]: https://github.com/clap-rs/clap/compare/v4.0.32...v4.1.0
 [4.0.32]: https://github.com/clap-rs/clap/compare/v4.0.31...v4.0.32
 [4.0.31]: https://github.com/clap-rs/clap/compare/v4.0.30...v4.0.31
 [4.0.30]: https://github.com/clap-rs/clap/compare/v4.0.29...v4.0.30

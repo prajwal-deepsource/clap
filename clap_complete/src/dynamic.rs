@@ -2,9 +2,11 @@
 
 /// Complete commands within bash
 pub mod bash {
+    use std::ffi::OsStr;
     use std::ffi::OsString;
     use std::io::Write;
 
+    use clap_lex::OsStrExt as _;
     use unicode_xid::UnicodeXID;
 
     #[derive(clap::Subcommand)]
@@ -320,11 +322,7 @@ complete OPTIONS -F _clap_complete_NAME EXECUTABLES
                 return complete_arg(&arg, current_cmd, current_dir, pos_index, is_escaped);
             }
 
-            debug!(
-                "complete::next: Begin parsing '{:?}' ({:?})",
-                arg.to_value_os(),
-                arg.to_value_os().as_raw_bytes()
-            );
+            debug!("complete::next: Begin parsing '{:?}'", arg.to_value_os(),);
 
             if let Ok(value) = arg.to_value() {
                 if let Some(next_cmd) = current_cmd.find_subcommand(value) {
@@ -408,7 +406,7 @@ complete OPTIONS -F _clap_complete_NAME EXECUTABLES
                     crate::generator::utils::shorts_and_visible_aliases(cmd)
                         .into_iter()
                         // HACK: Need better `OsStr` manipulation
-                        .map(|f| format!("{}{}", arg.to_value_os().to_str_lossy(), f).into()),
+                        .map(|f| format!("{}{}", arg.to_value_os().to_string_lossy(), f).into()),
                 );
             }
         }
@@ -428,7 +426,7 @@ complete OPTIONS -F _clap_complete_NAME EXECUTABLES
     }
 
     fn complete_arg_value(
-        value: Result<&str, &clap_lex::RawOsStr>,
+        value: Result<&str, &OsStr>,
         arg: &clap::Arg,
         current_dir: Option<&std::path::Path>,
     ) -> Vec<OsString> {
@@ -444,7 +442,7 @@ complete OPTIONS -F _clap_complete_NAME EXECUTABLES
             }
         } else {
             let value_os = match value {
-                Ok(value) => clap_lex::RawOsStr::from_str(value),
+                Ok(value) => OsStr::new(value),
                 Err(value_os) => value_os,
             };
             match arg.get_value_hint() {
@@ -485,7 +483,7 @@ complete OPTIONS -F _clap_complete_NAME EXECUTABLES
     }
 
     fn complete_path(
-        value_os: &clap_lex::RawOsStr,
+        value_os: &OsStr,
         current_dir: Option<&std::path::Path>,
         is_wanted: impl Fn(&std::path::Path) -> bool,
     ) -> Vec<OsString> {
@@ -499,10 +497,11 @@ complete OPTIONS -F _clap_complete_NAME EXECUTABLES
             }
         };
         let (existing, prefix) = value_os
-            .split_once('\\')
-            .unwrap_or((clap_lex::RawOsStr::from_str(""), value_os));
-        let root = current_dir.join(existing.to_os_str());
+            .split_once("\\")
+            .unwrap_or((OsStr::new(""), value_os));
+        let root = current_dir.join(existing);
         debug!("complete_path: root={:?}, prefix={:?}", root, prefix);
+        let prefix = prefix.to_string_lossy();
 
         for entry in std::fs::read_dir(&root)
             .ok()
@@ -510,8 +509,8 @@ complete OPTIONS -F _clap_complete_NAME EXECUTABLES
             .flatten()
             .filter_map(Result::ok)
         {
-            let raw_file_name = clap_lex::RawOsString::new(entry.file_name());
-            if !raw_file_name.starts_with_os(prefix) {
+            let raw_file_name = OsString::from(entry.file_name());
+            if !raw_file_name.starts_with(&prefix) {
                 continue;
             }
 
